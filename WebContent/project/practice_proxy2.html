@@ -20,14 +20,15 @@
                     },
                     success : function(xml){
                            console.log(xml);  
-                           
+                       //text() 함수는 선택한 요소 안의 내용을 가져오거나, 다른 내용으로 바꾸는 메서드    
                         $(xml).find("row").each(function(){
-                            let NM = $(this).find("NM").text();
-                            let ADDR = $(this).find("ADDR").text();
-                            let XCODE = $(this).find("XCODE").text();
-                            let YCODE = $(this).find("YCODE").text();
-                            var summ = NM+", "+ADDR+", "+XCODE+", "+YCODE+"<br>";
-                            $('#sel').append(summ);
+	                            let NM = $(this).find("NM").text();
+	                            let ADDR = $(this).find("ADDR").text();
+	                            let XCODE = $(this).find("XCODE").text();
+	                            let YCODE = $(this).find("YCODE").text();
+	                            var summ = NM+", "+ADDR+", "+XCODE+", "+YCODE+"<br>";
+	                            $('#sel').append(summ);
+
 
                     	});
                     	

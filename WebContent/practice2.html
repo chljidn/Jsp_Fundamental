@@ -2,22 +2,95 @@
 <head>
 	<meta charset="utf-8">
     <title></title>
-    <script type="text/javascript" src="jquery-3.5.1.js"></script>
-    <script type="text/javascript">
-
-    </script>
+    <script type="text/javascript" src="js/jquery-3.5.1.js"></script>
+    <script type="text/javascript"></script>
 
 </head>
 <body>
-    <h3></h3>
-    <form action = "save.html" method="post" name = "f">
-        <input type="text" name = "id" id = "id">
-                
-		<!-- type = "submit" => 버튼이 서버로 양식데이터를 제출함. 지정하지 않은 경우 기본값. -->
-        <button type = "submit" id ="sendLogin">검색</button>
-        <div id = 'sel'></div>
+    <script>       
+        //버튼을 누르면 데이터를 가져올 수 있는 작성문
+        $(function(){
+            $('#search').click(function(){
+                $.ajax({
+                    url : 'proxy.jsp?url=http://openapi.seoul.go.kr:8088/7a69797a5163686c39384158425559/xml/vtrHospitalInfo/1/1000/',
+                    type : 'GET',
+                    dataType : 'xml',
+                    error : function(){
+                        alert('error');
+                    },
+                    success : function(xml){
+                        //   console.log(xml);  
+                       //text() 함수는 선택한 요소 안의 내용을 가져오거나, 다른 내용으로 바꾸는 메서드    
+                       //each : object와 배열 모두에서 사용할 수 있는 반복함수. 
+                        	//row열에서 들어와서 지도명 주소의 무슨구 인지를 text함수로 찾아서 변수로 저장.
+							    var msg = "";
+                        		msg +="<div class='table-responsive-md'>";
+	    						msg +="<table class='table table-bordered'>";
+	    						msg +="<thead>";
+	    						msg +="<tr>";
+	    						msg +="<th>이름</th>";
+	    						msg +="<th>주소</th>";
+	    						msg +="<th>전화번호</th>";
+	    						msg +="<th>위도</th>";
+	    						msg +="<th>경도</th>";
+	    						msg +="</tr>";
+	    						msg +="</thead>";
+	    						msg +="<tbody>";
+	    						msg += "<tr>";
+                        $(xml).find("row").each(function(){
+                         		let NM = $(this).find("NM").text();
+	                            let ADDR = $(this).find("ADDR").text();
+	                            let TEL = $(this).find("TEL").text();
+	                            let XCODE = $(this).find("XCODE").text();
+	                            let YCODE = $(this).find("YCODE").text();	        	                            
+	                            msg +="<td>"+NM+"</td>";
+	                            msg +="<td>"+ADDR+"</td>";
+	                            msg +="<td>"+TEL+"</td>";
+	                            msg +="<td>"+XCODE+"</td>";
+	                            msg +="<td>"+YCODE+"</td>";
+	                            msg += "</tr>";
+	                            msg +="</tbody>";
+	                            msg +="</table>";
+	                            msg +="</div>";								
+                    	});  
+						$('#content2').append(msg);
 
-    </form>
+                     }
+                    
+                });
+            });
 
+        });
+    </script>
+    
+    <div class="container">
+		<div class="row" style="margin-top:20px">
+			<div class="col-sm-12">
+				<h5 class="card-title">마스크 검색</h5>
+				 <div class="form-row d-flex align-items-center">
+		              <div class="form-group col-md-10">
+		                 <input type="text" id="address" name="address" class="form-control" placeholder="예)서울특별시 강남구 역삼동"  />
+		                 </div>
+		              <div class="form-group col-md-2">
+		                <button id="search"    class="btn btn-info btn-lg btn-block" ><i class="fa fa-search" aria-hidden="true"></i>  검색</button>
+		              </div>
+	              </div>
+			</div>
+		</div>
+		<div class="row" style="margin-top:20px">
+			<div class="col-sm-12">
+		    
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12" id="content2">
+			
+			</div>
+		</div>
+	</div>
+
+    
 </body>
+
+    
 </html>
