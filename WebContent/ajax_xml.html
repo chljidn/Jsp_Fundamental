@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ajax Get</title>
+    <script type="text/javascript" src="jquery-3.5.1.js"></script>
+
+    <script>
+        
+        //버튼을 누르면 데이터를 가져올 수 있는 작성문
+        $(function(){
+            $('#btn').click(function(){
+                $.ajax({
+                    url : 'xml_data.xml',
+                    type : 'GET',
+                    dataType : 'xml',
+                    error : function(){
+                        alert('error');
+
+                    },
+                    success : function(xml){
+                    	$(xml).find("user").each(function(){
+                    		let name = $(this).find("name").text();
+                    		let clubid = $(this).find("clubid").text();
+                    		var info = name+","+clubid+"</br>";
+                    		$('#sel').append(info);
+                    	});
+                     }
+
+
+                });
+
+            });
+
+
+        });
+    </script>
+</head>
+<body>
+    <button id="btn">가져오기</button>
+    <div id="sel">
+
+    </select>
+    
+</body>
+</html>

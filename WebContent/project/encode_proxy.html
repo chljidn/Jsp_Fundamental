@@ -1,0 +1,43 @@
+<!-- ajax_proxy.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajax Get</title>
+    <script type="text/javascript" src="jquery-3.5.1.js"></script>
+    <script>
+        
+        //버튼을 누르면 데이터를 가져올 수 있는 작성문
+        $(function(){
+            $('#btn').click(function(){
+            	var address = encodeURIComponent('http://apis.data.go.kr/B552061/trafficAccidentDeath?serviceKey=SoefkOAVB5S16TLHVgxLyPG41TiGVe%2BP0pCsH9vQ4UXBhrE64pxN0F9qUZPHUm23NT98%2Fi5IXm6hqntWVCCrqw%3D%3D?searchYear=2014&siDo=1100&guGun=1117&type=xml&numOfRows=10&pageNo=1');
+                $.ajax({
+                    url : 'proxy.jsp?url='+address,
+                    type : 'GET',
+                    dataType : 'json',
+                    error : function(){
+                        alert('error');
+
+                    },
+                    success : function(obj){
+                    	$('#sel').append(JSON.stringify(obj));
+                     }
+
+
+                });
+
+            });
+
+
+        });
+    </script>
+</head>
+<body>
+    <button id="btn">가져오기</button>
+    <div id="sel">
+
+    </select>
+    
+</body>
+</html>

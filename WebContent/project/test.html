@@ -1,0 +1,62 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>API 호출 예제 소스</title>
+<script src="jquery-3.5.1.js" ></script>
+
+<script>
+function getData(){
+      $.ajax({
+        url : "proxy.jsp?url=http://www.localdata.kr/data/dataView.do?ctgryGbn=02&groupGbn=03&opnSvcId=02_03_01_P",
+        type: "get",
+        data:$("#form").serialize(),
+        dataType:"xml",
+        success:function(resultData){
+            $("#list").html("");
+            var resultCode = $(resultData).find("code").text();
+            var resultMessage = $(resultData).find("message").text();
+            if(resultCode != "00"){
+              alert("에러발생");
+            }else{
+            if(resultData !=null){
+              dataList(resultData);
+            }
+          }
+        }
+        ,error : function(xhr,status, error){
+          alert("에러발생");
+        }
+      });
+}
+function dataList(resultData){
+      var items ="";
+      items +="<table><thead><tr><th>번호</th><th>자치단체코드(신고지역)</th><th>인허가번호</th><th>서비스ID</th></tr></thead><tbody>";
+      $(resultData).find("row").each(function(){
+        //API 신청 시 선택한 제공항목 입력
+        items +="<tr>";
+        items +="<td>" + $(this).find('ID').text()+"</td>";
+        items +="<td>" + $(this).find('NM').text()+"</td>";
+        items +="<td>" + $(this).find('ADDR_OLD').text()+"</td>";
+        items +="<td>" + $(this).find('ADDR').text()+"</td>";
+        items +="</tr>";
+      });
+        items += "</tbody></table>";
+        $("#list").html(items);
+      }
+</script>
+
+</head>
+<body>
+<form name="form" id="form" method="get">
+<input type="text" name="KEY" id="KEY" value="7a69797a5163686c39384158425559"/>
+<input type="text" name="TYPE" id="TYPE" value="json"/>
+<input type="text" name="SERVICE" id="SERVICE" value="vtrHospitalInfo"/>
+<input type="text" name="START_INDEX" id="START_INDEX" value="1"/>
+<input type="text" name="END_INDEX" id="END_INDEX" value="10"/>
+<input type="button" onClick="getData();" value="API호출하기" />
+</form>
+<div id="list"></div><!-- 조회 결과 -->
+</body>
+</html>

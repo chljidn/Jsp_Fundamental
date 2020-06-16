@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ajax Get</title>
+    <script type="text/javascript" src="../js/jquery-3.5.1.js"></script>
+
+    <script>
+        
+        //버튼을 누르면 데이터를 가져올 수 있는 작성문
+        $(function(){
+            $('#btn').click(function(){
+                $.ajax({
+                    url : 'proxy.jsp?url=http://openapi.seoul.go.kr:8088/7a69797a5163686c39384158425559/xml/vtrHospitalInfo/1/1000/',
+                    type : 'GET',
+                    dataType : 'xml',
+                    error : function(){
+                        alert('error');
+                    },
+                    success : function(xml){
+                           console.log(xml);  
+                           
+                        $(xml).find("row").each(function(){
+                            let NM = $(this).find("NM").text();
+                            let ADDR = $(this).find("ADDR").text();
+                            let XCODE = $(this).find("XCODE").text();
+                            let YCODE = $(this).find("YCODE").text();
+                            var summ = NM+", "+ADDR+", "+XCODE+", "+YCODE+"<br>";
+                            $('#sel').append(summ);
+
+                    	});
+                    	
+                     }
+
+                });
+
+            });
+
+
+        });
+    </script>
+</head>
+<body>
+    <button id="btn">가져오기</button>
+    <div id="sel">
+
+    </select>
+    
+</body>
+</html>
