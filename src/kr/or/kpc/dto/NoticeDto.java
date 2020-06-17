@@ -8,6 +8,15 @@ public class NoticeDto {
 	private String regdate;
 	public NoticeDto() {
 		super();
+		// TODO Auto-generated constructor stub
+	}
+	public NoticeDto(int num, String writer, String title, String content, String regdate) {
+		super();
+		this.num = num;
+		this.writer = writer;
+		this.title = title;
+		this.content = content;
+		this.regdate = regdate;
 	}
 	public int getNum() {
 		return num;
@@ -41,6 +50,4 @@ public class NoticeDto {
 	}
 	
 	
-
 }
-

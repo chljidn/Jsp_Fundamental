@@ -1,0 +1,187 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<!-- Font Awesome CSS -->
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+	<script src="../js/jquery-3.4.1.js"></script>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  
+	<title>마스크 검색</title>
+</head>
+
+<body>
+	
+	<div class="container">
+		<div class="row" style="margin-top:20px">
+			<div class="col-sm-12">
+				<h5 class="card-title">마스크 검색</h5>
+				 <div class="form-row d-flex align-items-center">
+		              <div class="form-group col-md-10">
+		                 <input type="text" id="address" name="address" class="form-control" placeholder="예)서울특별시 강남구 역삼동"  />
+		                 </div>
+		              <div class="form-group col-md-2">
+		                <button id="search"    class="btn btn-info btn-lg btn-block" ><i class="fa fa-search" aria-hidden="true"></i>  검색</button>
+		              </div>
+	              </div>
+			</div>
+		</div>
+		<div class="row" style="margin-top:20px">
+			<div class="col-sm-12">
+			<p>
+				주소를 기준으로 해당 구 또는 동내에 존재하는 판매처 및 재고 상태 등의 판매 정보 제공.<br> 
+				예 - '서울특별시 강남구' or '서울특별시 강남구 논현동' or '대구광역시 중구' or ' 강원도 춘천시'<br> 
+				('서울특별시' 와 같이 '시'단위만 입력하는 것은 불가능합니다.)
+			</p>
+		    
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12" id="content2">
+			
+			</div>
+		</div>
+	</div>
+	
+	
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+		</script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+	</script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#address").keydown(function(key) {
+					
+				//keyCode = enter => 엔터치면 button태그의 id인 search의 click이벤트가 발생.
+				if (key.keyCode == 13) {
+					$('#search').trigger("click");
+				
+				}
+
+			});
+			//bind() 함수 : 어떠한 이벤트가 발생했을 때, 연결된 함수들을 묶는 함수.
+			$('#search').bind('click', function(){
+				if($('#address').val()==""){
+					alert('주소를 입력하세요..');
+					return;
+				}
+				//여기서 검색 알고리즘 발생. 주소명 파라미터에 변수값을 줘서 입력한 변수값을 파라미터로 불러옴. 
+				var address = encodeURIComponent($('#address').val());
+				var url = 'https://8oi9s0nnth.apigw.ntruss.com/corona19-masks/v1/storesByAddr/json?address='+address;
+				$.ajax({
+					type : 'POST',
+					url : 'proxy.jsp',
+					data : {url : url},
+					dataType : 'json',
+					success : function(json){
+						$('#content1').empty(); //empty() : 자식 요소(자손까지 포함)뿐만 아니라 일치하는 요소내의 텍스트를 지운다.
+						$('#content2').empty();
+						
+						var count = json.count;
+						var address = json.address;
+						var msg = "";
+					
+						msg +="<div class='table-responsive-md'>";
+						msg +="<table class='table table-bordered'>";
+						msg +="<caption>총갯수  : "+count+"</caption>";
+						msg +="<thead>";
+						msg +="<tr>";
+						msg +="<th>번호</th>";
+						msg +="<th>이름</th>";
+						msg +="<th>주소</th>";
+						//msg +="<th>식별 코드</th>";
+						//msg +="<th>생성날짜</th>";
+						//msg +="<th>위도</th>";
+						//msg +="<th>경도</th>";
+						
+						msg +="<th>재고</th>";
+						msg +="<th>입고날짜</th>";
+						//msg +="<th>판매처 유형</th>";
+						msg +="</tr>";
+						msg +="</thead>";
+						msg +="<tbody>";
+						var index = 1;
+						for(var i in json.stores){
+							msg += "<tr>";
+							var addr =  json.stores[i].addr;
+							var code = json.stores[i].code;
+							var created_at = json.stores[i].created_at;
+							var lat = json.stores[i].lat;
+							var lng = json.stores[i].lng;
+							var name = json.stores[i].name;
+							var remain_stat = json.stores[i].remain_stat;
+							var remain_msg = "";
+							if(remain_stat=="plenty"){
+								remain_stat = "<button type='button' class='btn btn-success'>100 이상</button>";
+								remain_msg = "100이상 보유";
+							}else if(remain_stat=="some"){
+								remain_stat = "<button type='button' class='btn btn-warning'>30-  99 개</button>";
+								remain_msg = "30~99개 보유";
+							}else if(remain_stat=="few"){
+								remain_stat = "<button type='button' class='btn btn-danger'>2-29 개</button>";
+								remain_msg = "2~29개 보유";
+							}else if(remain_stat=="empty"){
+								remain_stat = "<button type='button' class='btn btn-secondary'> 1개 이하</button>";
+								remain_msg = "1개 이하 보유";
+							}else {
+								remain_stat = "<button type='button' class='btn btn-light'>없음</button>";
+								remain_msg = "없음";
+							}
+							var stock_at = json.stores[i].stock_at;
+							if(stock_at==null){
+								stock_at = "없음";
+							}
+							var type = json.stores[i].type;
+							if(type=="01"){
+								type = "약국";
+							}else if(type=="02"){
+								type = "우체국";
+							}else if(type=="03"){
+								type = "농협";
+							}
+							msg +="<td>"+index+"</td>";
+							msg +="<td><a href='map.jsp?lat="+lat+"&lng="+lng+"&content="+name+"<br>수량 : "+remain_msg+"<br>입고날짜 : "+stock_at+"' target='_blank'>"+name+"</a></td>";
+							msg +="<td>"+addr+"</td>";
+							//msg +="<td>"+code+"</td>";
+							//msg +="<td>"+created_at+"</td>";
+							//msg +="<td>"+lat+"</td>";
+							//msg +="<td>"+lng+"</td>";
+							
+							msg +="<td>"+remain_stat+"</td>";
+							msg +="<td>"+stock_at+"</td>";
+							//msg +="<td>"+type+"</td>";
+							
+							msg += "</tr>";
+							index +=1;
+						}
+						msg +="</tbody>";
+						msg +="</table>";
+						msg +="</div>";
+						$('#content2').append(msg);
+						
+						//$('#content').show(1000);
+					}//end sucess
+				});//end ajax
+			});//end event
+		});//end ready
+	</script>
+</body>
+
+</html>
+	

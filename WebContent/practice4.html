@@ -9,8 +9,19 @@
 <body>
     <script>       
         //버튼을 누르면 데이터를 가져올 수 있는 작성문
-        $(function(){
+        $(function(){ // $(document).ready(function(){ 과 같은 구문
             $('#search').click(function(){
+            	
+            	//input 입력값 변수에 넣기.
+            	var searching = $("#searchbox").val();
+            	//서울특별시 강남구로 입력한 경우 공백 기준으로 문자열 쪼개기
+            	//강남구만 입력한 경우 쪼개지 않음.
+            	if(searching.includes(' ')){
+	            	var searching_split = searching.split(' ');
+	            	var searching2 = searching_split[1];
+            	}else{
+            		var searching2 = searching;
+            	}
                 $.ajax({
                     url : 'proxy.jsp?url=http://openapi.seoul.go.kr:8088/7a69797a5163686c39384158425559/xml/vtrHospitalInfo/1/1000/',
                     type : 'GET',
@@ -31,14 +42,18 @@
 	    						msg +="<th>이름</th>";
 	    						msg +="<th>주소</th>";
 	    						msg +="<th>전화번호</th>";
+	    						msg +="<th>운영상태</th>";
 	    						//msg +="<th>위도</th>";
 	    						//msg +="<th>경도</th>";
 	    						msg +="</tr>";
 	    						msg +="</thead>";
                         $(xml).find("row").each(function(){
+                        	//입력값과 비교할 변수/                     	
+	                        let ADDR = $(this).find("ADDR").text();
+                        	if(ADDR.includes(searching2)){
                          		let NM = $(this).find("NM").text();
-	                            let ADDR = $(this).find("ADDR").text();
 	                            let TEL = $(this).find("TEL").text();
+	                            let STATE = $(this).find("STATE").text();
 	                            //let XCODE = $(this).find("XCODE").text();
 	                            //let YCODE = $(this).find("YCODE").text();	        	                            
 	    						msg +="<tbody>";
@@ -46,16 +61,20 @@
 	                            msg +="<td>"+NM+"</td>";
 	                            msg +="<td>"+ADDR+"</td>";
 	                            msg +="<td>"+TEL+"</td>";
+	                            msg +="<td>"+STATE+"</td>";
 	                            //msg +="<td>"+XCODE+"</td>";
 	                           // msg +="<td>"+YCODE+"</td>";
 	                            msg += "</tr>";
-	                            msg +="</tbody>";
+	                            msg +="</tbody>";                        		
+                        	}else {
+                        	}
                     	});  
 	                            msg +="</table>";
 	                            msg +="</div>";								
 						$('#content2').append(msg);
 
                      }
+                    
                     
                 });
             });
@@ -66,10 +85,10 @@
     <div class="container">
 		<div class="row" style="margin-top:20px">
 			<div class="col-sm-12">
-				<h5 class="card-title">마스크 검색</h5>
+				<h5 class="card-title">동물병원</h5>
 				 <div class="form-row d-flex align-items-center">
 		              <div class="form-group col-md-10">
-		                 <input type="text" id="address" name="address" class="form-control" placeholder="예)양천구"  />
+		                 <input type="text" id="searchbox" name="searchbox" class="form-control" placeholder="예)양천구"  />
 		                 </div>
 		              <div class="form-group col-md-2">
 		                <button id="search"    class="btn btn-info btn-lg btn-block" ><i class="fa fa-search" aria-hidden="true"></i>  검색</button>
@@ -77,6 +96,9 @@
 	              </div>
 			</div>
 		</div>
+		<p>
+		검색 예) 서울특별시 양천구 or 양천구
+		</p>
 		<div class="row" style="margin-top:20px">
 			<div class="col-sm-12">
 		    

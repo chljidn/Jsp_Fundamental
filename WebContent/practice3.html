@@ -11,6 +11,7 @@
         //버튼을 누르면 데이터를 가져올 수 있는 작성문
         $(function(){
             $('#search').click(function(){
+            	var searching = $("#searchbox").val();
                 $.ajax({
                     url : 'proxy.jsp?url=http://openapi.seoul.go.kr:8088/7a69797a5163686c39384158425559/xml/vtrHospitalInfo/1/1000/',
                     type : 'GET',
@@ -36,8 +37,10 @@
 	    						msg +="</tr>";
 	    						msg +="</thead>";
                         $(xml).find("row").each(function(){
+                        	//입력값과 비교할 변수/                     	
+	                        let ADDR = $(this).find("ADDR").text();
+                        	if(ADDR.includes(searching)){
                          		let NM = $(this).find("NM").text();
-	                            let ADDR = $(this).find("ADDR").text();
 	                            let TEL = $(this).find("TEL").text();
 	                            //let XCODE = $(this).find("XCODE").text();
 	                            //let YCODE = $(this).find("YCODE").text();	        	                            
@@ -49,7 +52,9 @@
 	                            //msg +="<td>"+XCODE+"</td>";
 	                           // msg +="<td>"+YCODE+"</td>";
 	                            msg += "</tr>";
-	                            msg +="</tbody>";
+	                            msg +="</tbody>";                        		
+                        	}else {
+                        	}
                     	});  
 	                            msg +="</table>";
 	                            msg +="</div>";								
@@ -66,10 +71,10 @@
     <div class="container">
 		<div class="row" style="margin-top:20px">
 			<div class="col-sm-12">
-				<h5 class="card-title">마스크 검색</h5>
+				<h5 class="card-title">동물병원</h5>
 				 <div class="form-row d-flex align-items-center">
 		              <div class="form-group col-md-10">
-		                 <input type="text" id="address" name="address" class="form-control" placeholder="예)양천구"  />
+		                 <input type="text" id="searchbox" name="searchbox" class="form-control" placeholder="예)양천구"  />
 		                 </div>
 		              <div class="form-group col-md-2">
 		                <button id="search"    class="btn btn-info btn-lg btn-block" ><i class="fa fa-search" aria-hidden="true"></i>  검색</button>

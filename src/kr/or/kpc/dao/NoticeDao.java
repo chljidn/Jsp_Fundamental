@@ -8,28 +8,29 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import kr.or.kpc.dto.NoticeDto;
+import kr.or.kpc.util.ConnLocator;
 
 public class NoticeDao {
 	public static NoticeDao dao;
-	private NoticeDao(){}
+	private NoticeDao() {}
 	public static NoticeDao getInstance() {
-		if(dao == null) {
+		if(dao ==  null) {
 			dao = new NoticeDao();
-			
 		}
 		return dao;
 	}
+	
 	public int insert(NoticeDto dto) {
 		int resultCount = 0;
 		Connection con = null;
 		PreparedStatement pstmt = null;
 
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/kpc", "kpc12", "kpc1234");
+			con = ConnLocator.getConnect();
 			StringBuffer sql = new StringBuffer();
-			sql.append("INSERT INTO notice(n_num, n_write, n_title, n_content, n_regdate) ");
-			sql.append("VALUES(?,?,?,?, NOW());");
-			sql.append("");
+			sql.append("INSERT INTO notice(n_num, n_writer,n_title,n_content,n_regdate) ");
+			sql.append("VALUES(?,?,?,?, NOW()) ");
+			
 
 			pstmt = con.prepareStatement(sql.toString());
 
@@ -40,21 +41,19 @@ public class NoticeDao {
 			pstmt.setString(++index, dto.getContent());
 
 			resultCount = pstmt.executeUpdate();
-
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} finally {
 			try {
-				if (con != null)
-					con.close();
 				if (pstmt != null)
 					pstmt.close();
+				if (con != null)
+					con.close();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-
 		}
 		return resultCount;
 		
@@ -65,12 +64,12 @@ public class NoticeDao {
 		PreparedStatement pstmt = null;
 
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/kpc", "kpc12", "kpc1234");
+			con = ConnLocator.getConnect();
 			StringBuffer sql = new StringBuffer();
 			sql.append("UPDATE notice ");
-			sql.append("ser n_writer=?, n_title=?,n_content=?, ");
+			sql.append("SET n_writer=?, n_title=?, n_content=?, ");
 			sql.append("n_regdate = NOW() ");
-			sql.append("WHERE n_num = ?");
+			sql.append("WHERE n_num = ? ");
 
 			pstmt = con.prepareStatement(sql.toString());
 
@@ -79,80 +78,73 @@ public class NoticeDao {
 			pstmt.setString(++index, dto.getTitle());
 			pstmt.setString(++index, dto.getContent());
 			pstmt.setInt(++index, dto.getNum());
-
+			
 			resultCount = pstmt.executeUpdate();
-
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} finally {
 			try {
-				if (con != null)
-					con.close();
 				if (pstmt != null)
 					pstmt.close();
+				if (con != null)
+					con.close();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-
 		}
-		
 		return resultCount;
 	}
 	public int delete(int num) {
-		
 		int resultCount = 0;
 		Connection con = null;
 		PreparedStatement pstmt = null;
 
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/kpc", "kpc12", "kpc1234");
+			con = ConnLocator.getConnect();
 			StringBuffer sql = new StringBuffer();
 			sql.append("DELETE FROM notice ");
 			sql.append("WHERE n_num = ?");
+			sql.append("");
 
 			pstmt = con.prepareStatement(sql.toString());
 
 			int index = 0;
 			pstmt.setInt(++index, num);
-
 			resultCount = pstmt.executeUpdate();
-
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} finally {
 			try {
-				if (con != null)
-					con.close();
 				if (pstmt != null)
 					pstmt.close();
+				if (con != null)
+					con.close();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-
 		}
 		return resultCount;
 	}
 	
-	public ArrayList<NoticeDto> select(int start, int len) {
+	public ArrayList<NoticeDto> select(int start, int len){
 		ArrayList<NoticeDto> list = new ArrayList<NoticeDto>();
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/kpc", "kpc12", "kpc1234");
+			con = ConnLocator.getConnect();
 			StringBuffer sql = new StringBuffer();
-			sql.append("SELECT n_num, n_write, n_title, n_contenc, ");
-			sql.append("DATE_FORMAT(n_regdate, '%Y.%m.%d %d:%i') ");
-			sql.append("from notice ");
+			sql.append("SELECT n_num, n_writer, n_title, n_content,  ");
+			sql.append("DATE_FORMAT(n_regdate,'%Y.%m.%d %h:%i') ");
+			sql.append("FROM notice ");
 			sql.append("ORDER BY n_num DESC ");
-			sql.append("LIMIT ?,?");
-
+			sql.append("LIMIT ? , ? ");
 			pstmt = con.prepareStatement(sql.toString());
+
 			int index = 0;
 			pstmt.setInt(++index, start);
 			pstmt.setInt(++index, len);
@@ -165,13 +157,12 @@ public class NoticeDao {
 				String title = rs.getString(++index);
 				String content = rs.getString(++index);
 				String regdate = rs.getString(++index);
-
 				list.add(new NoticeDto(num,writer,title,content,regdate));
-
 			}
-		} catch (SQLException e) {
+
+		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		} finally {
 			try {
 				if (rs != null)
@@ -180,7 +171,6 @@ public class NoticeDao {
 					pstmt.close();
 				if (con != null)
 					con.close();
-
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -190,100 +180,134 @@ public class NoticeDao {
 		return list;
 	}
 	
-	public int select(int num) {
-		int dto = null;
+	public NoticeDto select(int num){
+		NoticeDto dto = null;
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/kpc","kpc12","kpc1234");
+			con = ConnLocator.getConnect();
 			StringBuffer sql = new StringBuffer();
-			sql.append("SELECT n_num, n_write, n_title, n_content, ");
-			sql.append("DATE_FORMAT(n_regdate, '%Y.%m.%d %d:%i') ");
-			sql.append("from notice ");
-			sql.append("WHERE n_num = ? ");
-			
+			sql.append("SELECT n_num, n_writer, n_title, n_content,  ");
+			sql.append("DATE_FORMAT(n_regdate,'%Y.%m.%d %h:%i') ");
+			sql.append("FROM notice ");
+			sql.append("WHERE n_num = ?");
+
 			pstmt = con.prepareStatement(sql.toString());
+
 			int index = 0;
+
 			pstmt.setInt(++index, num);
 			
 			rs = pstmt.executeQuery();
-			if(rs.next()) {
+			if (rs.next()) {
 				index = 0;
 				int _num = rs.getInt(++index);
 				String writer = rs.getString(++index);
 				String title = rs.getString(++index);
 				String content = rs.getString(++index);
 				String regdate = rs.getString(++index);
-				
-				dto = new NoticeDto(_num,writer,title,content,regdate);
-				
-				
+				dto = new NoticeDto(_num, writer, title, content, regdate);
 			}
-			
-		} catch (SQLException e) {
+
+		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		} finally {
 			try {
-				if (rs != null) rs.close();
-				if (pstmt != null) pstmt.close();
-				if (con != null) con.close();
-				
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
+
 		}
-		
-		
 		return dto;
 	}
 	public int getRows() {
-		int count = 0;
+		int count = 0 ;
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/kpc","kpc12","kpc1234");
+			con = ConnLocator.getConnect();
 			StringBuffer sql = new StringBuffer();
 			sql.append("SELECT COUNT(*) FROM notice");
 			
 			pstmt = con.prepareStatement(sql.toString());
+			
 			int index = 0;
-			
-			
 			rs = pstmt.executeQuery();
-			while(rs.next()) {
+			if(rs.next()) {
 				index = 0;
 				count = rs.getInt(++index);
-				
-	
 			}
 			
-		} catch (SQLException e) {
+		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		} finally {
 			try {
-				if (rs != null) rs.close();
-				if (pstmt != null) pstmt.close();
-				if (con != null) con.close();
-				
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(con != null) con.close();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			
 		}
-		
-		
 		return count;
 	}
-
-
-
+	
+	public int getMaxNum() {
+		int max = 0 ;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			con = ConnLocator.getConnect();
+			StringBuffer sql = new StringBuffer();
+			sql.append("SELECT ifnull(MAX(n_num)+1,1) FROM notice");
+			
+			pstmt = con.prepareStatement(sql.toString());
+			
+			int index = 0;
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				index = 0;
+				max = rs.getInt(++index);
+			}
+			
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(con != null) con.close();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+		}
+		return max;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
