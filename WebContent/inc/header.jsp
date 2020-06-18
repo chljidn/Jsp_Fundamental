@@ -48,11 +48,11 @@
 	      		</a>
 	      	</li> 	
 	      	<li class="nav-item active">
-	      		<a class="nav-link" href="/member/logout.jsp">로그아웃 <span class="sr-only">(current)</span></a>
+	      		<a class="nav-link" href="/member/logout.jsp">로그아웃 </a>
 	      	</li>  	      	
 	    	<%}else{%>
 	      	<li class="nav-item active">
-	      	<a class="nav-link" href="/member/login.jsp">로그인 <span class="sr-only">(current)</span></a>
+	      	<a class="nav-link" href="/member/login.jsp">로그인 </a>
 	    	
 	    	<%}%>
 	    

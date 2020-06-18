@@ -2,8 +2,16 @@
 <head>
 	<meta charset="utf-8">
     <title></title>
-    <script type="text/javascript" src="js/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="../js/jquery-3.5.1.js"></script>
     <script type="text/javascript"></script>
+
+
+<style type="text/css">
+ a:link { color: black; text-decoration: none;}
+ a:visited { color: black; text-decoration: none;}
+ a:hover { color: blue; text-decoration: underline;}
+</style>
+
 
 </head>
     <script>       
@@ -64,10 +72,12 @@
                          		let NM = $(this).find("NM").text();
 	                            let TEL = $(this).find("TEL").text();
 	                            let STATE = $(this).find("STATE").text();
-	                            //let XCODE = $(this).find("XCODE").text();
-	                            //let YCODE = $(this).find("YCODE").text();	        	                            
+	                            var XCODE = $(this).find("XCODE").text();
+	                            var YCODE = $(this).find("YCODE").text();	       
 	    						msg += "<tr>";
-	                            msg +="<td>"+NM+"</td>";
+	                            msg +="<td>"
+	                            msg += "<a href='map2.jsp?CODE1="+XCODE+"&CODE2="+YCODE+"' target='_blank'>"+NM+"</a>";
+	                            msg += "</td>";
 	                            msg +="<td>"+ADDR+"</td>";
 	                            msg +="<td>"+TEL+"</td>";
 	                            msg +="<td>"+STATE+"</td>";
@@ -92,7 +102,7 @@
        <input type="text" id="searchbox" name="searchbox" class="form-control" placeholder="예)양천구"  />
        <button class="search" id="search" ><i class="fa fa-search" aria-hidden="true"></i>  검색</button>
 		<p>
-		검색 예) 서울특별시 양천구 or 양천구
+			검색 예) 서울특별시 양천구 or 양천구
 		</p>
 		<div class="col-sm-12" id="content">			
 </body>
