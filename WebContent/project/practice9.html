@@ -67,7 +67,7 @@
                         $(xml).find("row").each(function(){ //row요소로 들어와서 지도명 주소의 무슨구 인지를 text함수로 찾아서 변수로 저장.              	 
 	                        let ADDR = $(this).find("ADDR").text(); //.text() 함수는 선택한 요소 안의 내용(텍스트)을 가져오거나, 다른 내용으로 바꾸는 메서드    
                      		let NM = $(this).find("NM").text();
-                        	if(ADDR.includes(searching2) || NM.includes(searching2) || (NM.includes(searching1) && NM.includes(searching2))){  
+                        	if(((ADDR.includes(searching2)) && (searching2 != "동물병원"))  || (NM.includes(searching2) && (searching2 != "동물병원"))) {  
 	                            let TEL = $(this).find("TEL").text();
 	                            let STATE = $(this).find("STATE").text();
 	                            var XCODE = $(this).find("XCODE").text();

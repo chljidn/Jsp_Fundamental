@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>지도</title>
 </head>
 <body>
 <div id="map" style="width:100%;height:1000px;"></div>
