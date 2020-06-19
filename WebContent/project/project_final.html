@@ -5,23 +5,40 @@
     <script type="text/javascript" src="../js/jquery-3.5.1.js"></script>
     <script type="text/javascript"></script>
 
+
 <style type="text/css">
- a:link { color: black; text-decoration: none;}
- a:visited { color: black; text-decoration: none;}
- a:hover { color: blue; text-decoration: underline;}
+@import url(//fonts.googleapis.com/earlyaccess/hanna.css);
+@import url(//fonts.googleapis.com/earlyaccess/jejumyeongjo.css);
+ 	a:link { color: black; text-decoration: none;}
+ 	a:visited { color: black; text-decoration: none;}
+ 	a:hover { color: blue; text-decoration: underline;}
  
- 
- th, td {
-        text-align: center;
- }
- input{
- width : 30px;
- }
+	.search-header{
+		color : #fff;
+	}
+	.search-tag-line{
+		color : #fff;
+	}
+	tr{
+		text-align:center;
+		
+	}
+	th {
+		font-family : 'Hanna';
+	}
+	td{
+		font-family : 'jejumyeongjo';
+	}
 
 </style>
-    
+
+
 </head>
-    	 <!-- Required meta tags -->
+
+
+<body>
+
+	 <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -37,7 +54,7 @@
         //버튼을 누르면 데이터를 가져올 수 있는 작성문
         $(function(){
         	
-			$('#searchbox').keydown(function(key) {				
+        	$('#searchbox').keydown(function(key) {		
 				//keyCode = enter => 엔터치면 button태그의 id인 search의 click이벤트가 발생.
 				if (key.keyCode == 13) {
 					$('#search').trigger("click");			
@@ -50,26 +67,24 @@
             	var searching = $("#searchbox").val();
             	//검색어를 '서울특별시 xx구'로 입력한 경우 공백(' ')을 기준으로 문자열 쪼개기
   
-            	if(searching.includes(' ')){ //검색어에 공백이 있을 경우에만 문자열을 쪼개기 위해서 if문 사용
-            		                         //xx구만 입력한 경우 쪼개지 않기위해서 if조건문 실행.
-	            	var searching_split = searching.split(' '); //공백을 기준으로 문자열 쪼갬.
-	            	var searching1 = searching_split[0];
+            	if(searching.includes(' ')){ 
+            		                         
+	            	var searching_split = searching.split(' '); 
 	            	var searching2 = searching_split[1]; // searching_split[0] : 서울특별시 , searching_split[1] : xx구
 	            	                                     // 이중에서 1번째 인덱스인 xx구만 searching2 변수에 넣음.
-	            	
             	}else{
             		var searching2 = searching; //검색어를 서울특별시 xx구가 아니라 xx구만 검색할 때, 문자열을 쪼개지않고 변수 searching2에 그대로 검색어를 넣음.
             	}
                 $.ajax({
-                    url : 'proxy.jsp?url=http://openapi.seoul.go.kr:8088/7a69797a5163686c39384158425559/xml/vtrHospitalInfo/1/1000/',
+                    url : 'proxy.jsp?url=http://openapi.seoul.go.kr:8088/인증키/xml/vtrHospitalInfo/1/1000/',
                     type : 'GET',
                     dataType : 'xml',
                     error : function(){
                         alert('error');
                     },
                     success : function(xml){
-                    	$('#content').empty();//empty() : 자식 요소(자손까지 포함)뿐만 아니라 일치하는 요소내의 텍스트를 지운다.
-                    	                      //먼저 검색되었던 데이터를 모두 지우기 위해서 사용(한 번 검색 후 다시 검색했을 때 페이지 데이터들이 새롭게 나타나게 하기 위함.)
+                    	$('#content').empty();
+                    	                      
 							    var msg = "";
                         		msg +="<div class='table-responsive-md'>";
 	    						msg +="<table width='300' height='100' class='table table-striped'>";
@@ -86,11 +101,11 @@
 	    						msg +="</thead>";
 	    						msg +="<tbody>";
 	    						
-                       //each : object와 배열 모두에서 사용할 수 있는 반복함수. 
-                        $(xml).find("row").each(function(){ //row요소로 들어와서 지도명 주소의 무슨구 인지를 text함수로 찾아서 변수로 저장.              	 
-	                        let ADDR = $(this).find("ADDR").text(); //.text() 함수는 선택한 요소 안의 내용(텍스트)을 가져오거나, 다른 내용으로 바꾸는 메서드    
-                     		let NM = $(this).find("NM").text();
-                        	if(((ADDR.includes(searching2)) && (searching2 != "동물병원"))  || (NM.includes(searching2) && (searching2 != "동물병원"))) {  
+   
+                        $(xml).find("row").each(function(){ 
+	                        let ADDR = $(this).find("ADDR").text(); 
+                        	if(ADDR.includes(searching2)){ 
+                         		let NM = $(this).find("NM").text();
 	                            let TEL = $(this).find("TEL").text();
 	                            let STATE = $(this).find("STATE").text();
 	                            var XCODE = $(this).find("XCODE").text();
@@ -100,12 +115,11 @@
 	                            msg +="<td>"+ADDR+"</td>";
 	                            msg +="<td>"+TEL+"</td>";
 	                            msg +="<td>"+STATE+"</td>";                   
-	                            msg +="<td><a href='/project/map.jsp?CODE1="+XCODE+"&CODE2="+YCODE+"' target='_blank'><img src = '/project/icon.png' width = '15' length='15'></td>";
+	                            msg +="<td><a href='/project/map.jsp?CODE1="+XCODE+"&CODE2="+YCODE+"' target='_blank'><img src = '/project/icon.png' width = '17' length='17'></td>";
 	                            //msg +="<td>"+XCODE+"</td>";
 	                           // msg +="<td>"+YCODE+"</td>";
 	                            msg += "</tr>";
-                        	}else{
-                        		
+                        	}else {
                         	}
                     	});  
 	                            msg +="</tbody>";                        		
@@ -117,15 +131,26 @@
             });
         });
     </script>
-    
+   
+<div class = "container">
+		<div class = "row" style = "margin-top : 40px">
+			</div>
+		</div>
 
-<body>
-       <input type="text" id="searchbox" name="searchbox" class="form-control" placeholder="예)양천구"  />
-       <button class="search" id="search" ><i class="fa fa-search" aria-hidden="true"></i>  검색</button>
-		<p>
-			검색 예) 서울특별시 양천구 or 양천구
-		</p>
-		<div class="col-sm-12" id="content">			
+		<div class = "image" style = "background-image : url(/wp-content/uploads/2019/11/web-design-2906159_1920.jpg')">
+			<div class = "container">
+				<h4 class = "search-header">무엇을 찾으시나요?</h4>
+				<p class = "search-tag-line">If you have any question you can ask below or enter what you are looking for!</p>
+				<input class="form-control" type="text" id="searchbox" name="searchbox" placeholder="예)서울특별시 양천구  or 양천구" title="* Please enter a search term!"/>
+				<button id = "search" class = "search-btn btn-lg" type = "button">Search</button>
+				<div id="search-error-container"></div>
+			</div>
+		</div>
+		
+			<div class="col-sm-12" id="content">			
+			</div>
+
+
 </body>
 
     

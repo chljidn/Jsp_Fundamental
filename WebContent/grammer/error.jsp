@@ -4,11 +4,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>JSP Comment</title>
+<title>JSP error</title>
 </head>
 <body>
-
-	<h1>에러 페이지!</h1>
+	
+	<h1>JSP error page</h1>
 </body>
 </html>
 

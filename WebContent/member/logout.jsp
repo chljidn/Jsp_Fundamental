@@ -1,10 +1,8 @@
 <%@page import="kr.or.kpc.dto.CustomerDto"%>
 <%@page import="kr.or.kpc.dao.CustomerDao"%>
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
-
-    <%
-		session.invalidate(); //¼¼¼Ç°´Ã¼¸¦ »èÁ¦ÇÑ´Ù.
-		//session.removeAttribute("login"); //¼¼¼Ç°´Ã¼ÀÇ ¼Ó¼ºÀ» »èÁ¦.
-		response.sendRedirect("/member/login.jsp");
-  	%>
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%
+	session.invalidate();//ì„¸ì…˜ê°ì²´ë¥¼ ì‚­ì œí•œë‹¤.
+	//session.removeAttribute("cart"); //ì„¸ì…˜ê°ì²´ì˜ ì†ì„±ì„ ì‚­ì œ
+	response.sendRedirect("/member/login.jsp");
+%>

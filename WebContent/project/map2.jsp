@@ -36,6 +36,15 @@ function transCoordCB(result, status) {
 
     // 정상적으로 검색이 완료됐으면 
     if (status === kakao.maps.services.Status.OK) {
+    	
+    	mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+        mapOption = {
+            center: new kakao.maps.LatLng(result[0].y,  result[0].x), // 지도의 중심좌표
+            level: 4 // 지도의 확대 레벨
+        };
+
+    	// 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+    	map = new kakao.maps.Map(mapContainer, mapOption);
 
         // 마커를 변환된 위치에 표시합니다
         var marker = new kakao.maps.Marker({
@@ -44,8 +53,6 @@ function transCoordCB(result, status) {
         })
     }
 }
-
-
 </script>
 </body>
 </html>

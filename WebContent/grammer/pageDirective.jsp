@@ -1,12 +1,13 @@
-<%@page import="java.io.File"%>
-<%@page import="java.util.Calendar"%>
-<%@page language="java"%>
-<%@page pageEncoding="utf-8"%>
-<%@page session="false"%>
-<%@page buffer="7kb"%>
-<%@page autoFlush="false"%>
-<%@page errorPage="error.jsp"%>
-<%@page isELIgnored="true" %>
+<%--pageDirective.jsp --%>
+<%@ page import="java.io.File"%>
+<%@ page import="java.util.Calendar"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ page pageEncoding="utf-8" %>
+<%@ page session="false" %>
+<%@ page buffer="7kb" %>
+<%@ page autoFlush="true" %>
+<%@ page errorPage="error.jsp" %>
+<%@ page isELIgnored="true" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,10 +20,8 @@
 		Calendar c = Calendar.getInstance();
 		File f = new File("");
 		//String str = null;
-		//int len = str.length(); //NullPointException
+		//int len = str.length();//NullPointerException
 	%>
 	${param.id }
 </body>
 </html>
-
-

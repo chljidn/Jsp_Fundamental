@@ -7,7 +7,7 @@
 <title>지도</title>
 </head>
 <body>
-<div id="map" style="width:100%;height:350px;"></div>
+<div id="map" style="width:100%;height:1000px;"></div>
 
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3cbb98baa4d3e4a906ae42c7202d0f54&libraries=services"></script>
 <script>
